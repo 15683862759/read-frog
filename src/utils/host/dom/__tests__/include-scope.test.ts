@@ -208,6 +208,21 @@ describe("includeSelectors whitelist", () => {
     expect(document.querySelector("#user-link")!.hasAttribute(PARAGRAPH_ATTRIBUTE)).toBe(false)
   })
 
+  it("labels Hugging Face top navigation through the built-in rule", () => {
+    setHost("huggingface.co")
+    document.body.innerHTML = `
+      <nav id="top-nav">
+        <a id="models-link" href="/models">Models</a>
+        <a href="/datasets">Datasets</a>
+      </nav>
+    `
+
+    walkAndLabelElement(document.body, "huggingface-nav", structuredClone(DEFAULT_CONFIG))
+
+    expect(document.querySelector("#top-nav")).toHaveAttribute(PARAGRAPH_ATTRIBUTE)
+    expect(document.querySelector("#models-link")).toHaveAttribute(WALKED_ATTRIBUTE)
+  })
+
   it("keeps X usernames excluded when a nested span matches a broad include selector", () => {
     setHost("x.com")
     document.body.innerHTML = `

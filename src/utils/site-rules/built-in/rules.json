@@ -1739,7 +1739,6 @@
       "ul.text-base",
       "a.group > div.flex-1",
       "div.absolute.truncate",
-      "nav",
       "ul[class*='dark:border-gray-800']",
       "div[class*='from-gray-100-to-white']"
     ]

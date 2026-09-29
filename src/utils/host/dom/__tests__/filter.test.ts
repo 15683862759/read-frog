@@ -178,6 +178,14 @@ describe("isDontWalkIntoAndDontTranslateAsChildElement", () => {
     expect(isDontWalkIntoAndDontTranslateAsChildElement(element, DEFAULT_CONFIG)).toBe(false)
   })
 
+  it("should not block a closed native popover subtree", () => {
+    const element = document.createElement("div")
+    element.setAttribute("popover", "auto")
+    element.style.display = "none"
+
+    expect(isDontWalkIntoAndDontTranslateAsChildElement(element, DEFAULT_CONFIG)).toBe(false)
+  })
+
   it("should treat preserveTextSelectors as dont-walk-but-translate", () => {
     setHost("preserve-example.org")
     const config = configWithSiteRule({

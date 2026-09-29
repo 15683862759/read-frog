@@ -320,7 +320,9 @@ export function isDontWalkIntoAndDontTranslateAsChildElement(
   const computedStyle = window.getComputedStyle(element)
   return (
     usesIconFont(computedStyle.fontFamily) ||
-    computedStyle.display === "none" ||
+    // Native popover open/close changes computed display without a DOM
+    // mutation, so closed popovers must still be labeled for later observation.
+    (computedStyle.display === "none" && !element.hasAttribute("popover")) ||
     computedStyle.visibility === "hidden"
   )
 }

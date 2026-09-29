@@ -485,6 +485,24 @@ describe("document root labeling guard", () => {
   })
 })
 
+describe("native popover labeling", () => {
+  it("labels the contents of a popover while its computed style is display:none", () => {
+    const host = fixture(`
+      <div id="sort-menu" popover="auto" style="display:none">
+        <menu role="listbox">
+          <button role="option" id="sort-option">Most Recent</button>
+        </menu>
+      </div>
+    `)
+
+    walkAndLabelElement(host, "closed-popover", DEFAULT_CONFIG)
+
+    expect(host.querySelector("#sort-menu")).toHaveAttribute(WALKED_ATTRIBUTE)
+    expect(host.querySelector("#sort-option")).toHaveAttribute(WALKED_ATTRIBUTE)
+    host.remove()
+  })
+})
+
 describe("document shell notranslate exemption", () => {
   function cleanUpRoot() {
     document.documentElement.classList.remove(NOTRANSLATE_CLASS)
