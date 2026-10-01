@@ -9,6 +9,25 @@ interface CacheMetadata extends Record<string, unknown> {
 
 type CachedItem = ProxyResponse
 
+const keysListOperations = new Map<string, Promise<unknown>>()
+
+async function runWithKeysListLock<T>(
+  keysListKey: string,
+  operation: () => Promise<T>,
+): Promise<T> {
+  const previousOperation = keysListOperations.get(keysListKey) ?? Promise.resolve()
+  const currentOperation = previousOperation.then(operation, operation)
+  keysListOperations.set(keysListKey, currentOperation)
+
+  try {
+    return await currentOperation
+  } finally {
+    if (keysListOperations.get(keysListKey) === currentOperation) {
+      keysListOperations.delete(keysListKey)
+    }
+  }
+}
+
 // TODO: solve race condition of cache group registry
 export class SessionCache {
   private prefix: string
@@ -65,25 +84,27 @@ export class SessionCache {
 
   async set(reqMethod: string, targetUrl: string, response: ProxyResponse): Promise<void> {
     try {
-      await this.ensureKeysListInitialized()
+      await runWithKeysListLock(this.keysListKey, async () => {
+        await this.ensureKeysListInitialized()
 
-      const key = this.makeKey(reqMethod, targetUrl)
-      const now = Date.now()
+        const key = this.makeKey(reqMethod, targetUrl)
+        const now = Date.now()
 
-      // Set cache item and metadata in parallel
-      await Promise.all([
-        storage.setItem(key, response),
-        storage.setMeta<CacheMetadata>(key, {
-          timestamp: now,
-        }),
-      ])
+        // Set cache item and metadata in parallel
+        await Promise.all([
+          storage.setItem(key, response),
+          storage.setMeta<CacheMetadata>(key, {
+            timestamp: now,
+          }),
+        ])
 
-      // Track this key for group clearing
-      const keysList = (await storage.getItem<string[]>(this.keysListKey)) || []
-      if (!keysList.includes(key)) {
-        keysList.push(key)
-        await storage.setItem(this.keysListKey, keysList)
-      }
+        // Track this key for group clearing
+        const keysList = (await storage.getItem<string[]>(this.keysListKey)) || []
+        if (!keysList.includes(key)) {
+          keysList.push(key)
+          await storage.setItem(this.keysListKey, keysList)
+        }
+      })
 
       logger.info("[SessionCache] Cache set:", { reqMethod, targetUrl })
     } catch (error) {
@@ -93,17 +114,19 @@ export class SessionCache {
 
   async delete(reqMethod: string, targetUrl: string): Promise<void> {
     try {
-      await this.ensureKeysListInitialized()
+      await runWithKeysListLock(this.keysListKey, async () => {
+        await this.ensureKeysListInitialized()
 
-      const key = this.makeKey(reqMethod, targetUrl)
+        const key = this.makeKey(reqMethod, targetUrl)
 
-      // Remove both data and metadata in parallel
-      await Promise.all([storage.removeItem(key), storage.removeMeta(key)])
+        // Remove both data and metadata in parallel
+        await Promise.all([storage.removeItem(key), storage.removeMeta(key)])
 
-      // Remove from keys list
-      const keysList = (await storage.getItem<string[]>(this.keysListKey)) || []
-      const updatedKeysList = keysList.filter((k) => k !== key)
-      await storage.setItem(this.keysListKey, updatedKeysList)
+        // Remove from keys list
+        const keysList = (await storage.getItem<string[]>(this.keysListKey)) || []
+        const updatedKeysList = keysList.filter((k) => k !== key)
+        await storage.setItem(this.keysListKey, updatedKeysList)
+      })
     } catch (error) {
       logger.error("[SessionCache] Delete error:", error)
     }
@@ -111,26 +134,30 @@ export class SessionCache {
 
   async clear(): Promise<void> {
     try {
-      await this.ensureKeysListInitialized()
+      let clearedCount = 0
+      await runWithKeysListLock(this.keysListKey, async () => {
+        await this.ensureKeysListInitialized()
 
-      // Get all tracked keys for this group
-      const keysList = (await storage.getItem<string[]>(this.keysListKey)) || []
+        // Get all tracked keys for this group
+        const keysList = (await storage.getItem<string[]>(this.keysListKey)) || []
 
-      if (keysList.length > 0) {
-        // Use bulk removal for better performance
-        await storage.removeItems(
-          keysList.map((key) => ({
-            key: key as any,
-            options: { removeMeta: true }, // Also remove metadata
-          })),
-        )
-      }
+        if (keysList.length > 0) {
+          // Use bulk removal for better performance
+          await storage.removeItems(
+            keysList.map((key) => ({
+              key: key as any,
+              options: { removeMeta: true }, // Also remove metadata
+            })),
+          )
+        }
 
-      // Clear the keys list itself
-      await storage.removeItem(this.keysListKey)
-      this.isInitialized = false // Reset initialization flag
+        // Clear the keys list itself
+        await storage.removeItem(this.keysListKey)
+        this.isInitialized = false // Reset initialization flag
+        clearedCount = keysList.length
+      })
 
-      logger.info("[SessionCache] Cleared cache:", { count: keysList.length })
+      logger.info("[SessionCache] Cleared cache:", { count: clearedCount })
     } catch (error) {
       logger.error("[SessionCache] Clear error:", error)
     }
