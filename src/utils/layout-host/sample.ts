@@ -4,10 +4,12 @@ import type {
   ImproveWritingSlot,
   SentenceAnalysisSlot,
 } from "@read-frog/layout-engine/presets"
-import type { SelectionToolbarCustomActionOutputField } from "@/types/config/selection-toolbar"
+import type {
+  SelectionToolbarCustomActionOutputField,
+  SelectionToolbarCustomActionSampleData,
+} from "@/types/config/selection-toolbar"
 import type { SupportedUiLocale } from "@/utils/i18n/locales"
-import { DEFAULT_UI_LOCALE } from "@/utils/i18n/locales"
-import { langCodeOfLocale } from "./labels"
+import { contentLocaleFor, langCodeOfLocale } from "./labels"
 import {
   getDictionarySlots,
   getImproveWritingSlots,
@@ -16,13 +18,15 @@ import {
   isSentenceAnalysisShaped,
 } from "./slots"
 
-// Sample results for the layout preview on the options page. Values are keyed
-// by field NAME, the shape a model's structured output has; user edits to the
-// samples are keyed by field id so they survive a rename.
+// Sample data for the layout preview on the options page: the selection, the
+// language the answer is written for, and a value per output field, keyed by
+// field id so it survives a rename. A custom action saves its sample data; a
+// built-in action's preview generates it. v107-to-v108 holds a frozen copy of
+// what is generated here, for the custom actions it gave sample data to.
 //
 // Samples are answers written in a language the extension has words in, keyed
-// by that language's UI locale: the preview picks the one in the reader's
-// language (see contentLocaleFor), whose target language is the locale's own.
+// by that language's UI locale: a new sample is written in the reader's
+// language (see contentLocaleFor), and its target language is the locale's own.
 
 // A worked Dictionary answer per language, so the preview reads like a lookup
 // by someone who reads that language: an English word explained in it, or, in
@@ -93,14 +97,6 @@ const DICTIONARY_SAMPLES: Record<SupportedUiLocale, DictionarySample> = {
     "çiçək (xüsusilə meyvə ağacının çiçəyi)",
     "Albalı çiçəklərinin ötəri gözəlliyi bizə hər anın qədrini bilməyi xatırladır.",
   ),
-}
-
-// The locale of the samples for `locale`: itself when there are samples in
-// it, else the default one.
-function sampleLocaleFor(locale: string | undefined): SupportedUiLocale {
-  return locale !== undefined && Object.hasOwn(DICTIONARY_SAMPLES, locale)
-    ? (locale as SupportedUiLocale)
-    : DEFAULT_UI_LOCALE
 }
 
 // A Sentence Analysis answer per language, the same way round as the
@@ -428,73 +424,99 @@ const IMPROVE_WRITING_SAMPLES: Record<SupportedUiLocale, ImproveWritingSample> =
   }),
 }
 
-export const LAYOUT_SAMPLE_NUMBER = 3
+type Field = SelectionToolbarCustomActionOutputField
+type SampleData = SelectionToolbarCustomActionSampleData
 
-// The selection and target language the preview renders with: those of the
-// sentence-analysis sample for a sentence-analysis-shaped action, of the
-// Improve Writing sample for an Improve-Writing-shaped one, else of the
-// dictionary sample, written in `locale`.
-export function getLayoutSampleContext(
-  outputSchema: SelectionToolbarCustomActionOutputField[],
-  locale?: string,
-): { selection: string; targetCode: LangCodeISO6393 } {
-  const sampleLocale = sampleLocaleFor(locale)
-  const { selection } = isSentenceAnalysisShaped(outputSchema)
-    ? SENTENCE_ANALYSIS_SAMPLES[sampleLocale]
-    : isImproveWritingShaped(outputSchema)
-      ? IMPROVE_WRITING_SAMPLES[sampleLocale]
-      : DICTIONARY_SAMPLES[sampleLocale]
-  return { selection, targetCode: langCodeOfLocale(sampleLocale) }
-}
+// A number field's sample. Every sample value is text, like a model's answer;
+// the layout scope converts a number field's.
+const SAMPLE_NUMBER = "3"
 
-export interface LayoutSampleOptions {
-  // The language the sample answers are written in, as a UI locale (see
-  // contentLocaleFor); defaults to the default UI language.
-  locale?: string
-  // Text for a string field with no curated sample; defaults to the name.
-  placeholder?: (field: SelectionToolbarCustomActionOutputField) => string
-  // Edited samples by field id. Kept as typed text: a number field's text is
-  // converted (or kept as written when not numeric) by the layout scope, like
-  // a model answer would be.
-  overrides?: Readonly<Record<string, string>>
-}
-
-export function buildLayoutSampleValues(
-  outputSchema: SelectionToolbarCustomActionOutputField[],
-  options: LayoutSampleOptions = {},
-): Record<string, string | number> {
-  // Curated text by field id, for the fields a generated card places.
+// The value a new sample gives a field of `outputSchema`, written in `locale`:
+// a number for a number field, the curated text for a field a generated card
+// places, else the field's own name.
+function sampleValueFor(
+  outputSchema: readonly Field[],
+  locale: SupportedUiLocale,
+): (field: Field) => string {
   const curatedByFieldId = new Map<string, string>()
-  const sampleLocale = sampleLocaleFor(options.locale)
-  const dictionarySample = DICTIONARY_SAMPLES[sampleLocale]
-  for (const [slot, field] of Object.entries(getDictionarySlots(outputSchema))) {
-    if (field) curatedByFieldId.set(field.id, dictionarySample.values[slot as DictionarySlot])
-  }
-  const sentenceAnalysisSample = SENTENCE_ANALYSIS_SAMPLES[sampleLocale]
-  for (const [slot, field] of Object.entries(getSentenceAnalysisSlots(outputSchema))) {
-    if (field) {
-      curatedByFieldId.set(field.id, sentenceAnalysisSample.values[slot as SentenceAnalysisSlot])
+  const place = <S extends string>(
+    slots: Partial<Record<S, Field>>,
+    curated: Readonly<Record<S, string>>,
+  ) => {
+    for (const [slot, field] of Object.entries(slots) as Array<[S, Field | undefined]>) {
+      if (field) curatedByFieldId.set(field.id, curated[slot])
     }
   }
-  const improveWritingSample = IMPROVE_WRITING_SAMPLES[sampleLocale]
-  for (const [slot, field] of Object.entries(getImproveWritingSlots(outputSchema))) {
-    if (field) {
-      curatedByFieldId.set(field.id, improveWritingSample.values[slot as ImproveWritingSlot])
-    }
-  }
+  place<DictionarySlot>(getDictionarySlots(outputSchema), DICTIONARY_SAMPLES[locale].values)
+  place<SentenceAnalysisSlot>(
+    getSentenceAnalysisSlots(outputSchema),
+    SENTENCE_ANALYSIS_SAMPLES[locale].values,
+  )
+  place<ImproveWritingSlot>(
+    getImproveWritingSlots(outputSchema),
+    IMPROVE_WRITING_SAMPLES[locale].values,
+  )
+  return (field) =>
+    field.type === "number" ? SAMPLE_NUMBER : (curatedByFieldId.get(field.id) ?? field.name)
+}
 
-  const values: Record<string, string | number> = {}
+// A new sample for an action with `outputSchema`, written for a reader of
+// `targetCode`. Its selection is the sentence analysis sample's for a
+// sentence-analysis-shaped action, the Improve Writing sample's for an
+// Improve-Writing-shaped one, else the dictionary sample's.
+export function createLayoutSampleData(
+  outputSchema: readonly Field[],
+  targetCode: LangCodeISO6393,
+): SampleData {
+  const locale = contentLocaleFor(targetCode)
+  const { selection } = isSentenceAnalysisShaped(outputSchema)
+    ? SENTENCE_ANALYSIS_SAMPLES[locale]
+    : isImproveWritingShaped(outputSchema)
+      ? IMPROVE_WRITING_SAMPLES[locale]
+      : DICTIONARY_SAMPLES[locale]
+  const valueOf = sampleValueFor(outputSchema, locale)
+  return {
+    selection,
+    targetCode: langCodeOfLocale(locale),
+    values: Object.fromEntries(outputSchema.map((field) => [field.id, valueOf(field)])),
+  }
+}
+
+// `sampleData` kept in step with `outputSchema`: a field it has no value for
+// gets a new one, in the sample's language, and the values of fields that are
+// gone are dropped. Without sample data (a built-in action, or sample data
+// that could not be read), a new sample for a reader of `targetCode`.
+export function syncLayoutSampleData(
+  sampleData: SampleData | undefined,
+  outputSchema: readonly Field[],
+  targetCode: LangCodeISO6393,
+): SampleData {
+  if (!sampleData) return createLayoutSampleData(outputSchema, targetCode)
+  const valueOf = sampleValueFor(outputSchema, contentLocaleFor(sampleData.targetCode))
+  const { values } = sampleData
+  return {
+    ...sampleData,
+    values: Object.fromEntries(
+      outputSchema.map((field) => [
+        field.id,
+        Object.hasOwn(values, field.id) ? values[field.id]! : valueOf(field),
+      ]),
+    ),
+  }
+}
+
+// The values a layout reads, keyed by field NAME like a model's structured
+// output. `sampleData` is in step with `outputSchema` (syncLayoutSampleData);
+// a field it has no value for reads as blank.
+export function layoutSampleValues(
+  sampleData: SampleData,
+  outputSchema: readonly Field[],
+): Record<string, string> {
+  const values: Record<string, string> = {}
   for (const field of outputSchema) {
-    const override = options.overrides?.[field.id]
-    const curated = curatedByFieldId.get(field.id)
-    let value: string | number
-    if (override !== undefined) value = override
-    else if (field.type === "number") value = LAYOUT_SAMPLE_NUMBER
-    else if (curated !== undefined) value = curated
-    else value = options.placeholder?.(field) ?? field.name
     // defineProperty: a field named `__proto__` must stay an own key.
     Object.defineProperty(values, field.name, {
-      value,
+      value: Object.hasOwn(sampleData.values, field.id) ? sampleData.values[field.id] : "",
       enumerable: true,
       writable: true,
       configurable: true,

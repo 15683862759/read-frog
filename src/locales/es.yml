@@ -644,9 +644,12 @@ options:
       providerUnavailable: El proveedor seleccionado no está disponible
     customActions:
       title: Acciones AI personalizadas
-      pageDescription: Escribe tus propios prompts y ejecútalos sobre el texto seleccionado desde la barra de selección.
+      pageDescription: Escribe tus propios prompts y ejecútalos sobre el texto seleccionado desde la barra de selección. Los datos, el estilo y la interacción de cada resultado son totalmente personalizables.
       description: Añade tus propias acciones AI estructuradas para texto seleccionado
       configTitle: Configuración de acciones
+      introVideo:
+        trigger: "Ver vídeo"
+        title: "Acciones AI personalizadas en 30 segundos"
       builtIn: Integrada
       add: Añadir acción AI
       edit: Editar acción AI
@@ -724,8 +727,10 @@ options:
           replay: Reproducir
           sampleData: Datos de ejemplo
           sampleDataHint: Solo se usan en esta vista previa y nunca se guardan.
+          sampleDataSavedHint: Solo se usan en esta vista previa y se guardan con esta instrucción.
           sampleDataReset: Restablecer ejemplos
-          sampleValue: Ejemplo de $1
+          sampleSelection: Texto seleccionado
+          sampleTargetLanguage: Idioma de destino
           insertField: Campo
           insertSpeak: Botón de lectura
           insertCondition: Si tiene valor
@@ -1474,6 +1479,9 @@ options:
           description: Esto eliminará todos los resultados de segmentación AI en caché. La próxima vez que reproduzcas un video con segmentación AI activada, se volverán a procesar los subtítulos.
   whatsNew:
     title: Novedades
+    postType:
+      promotion: Promoción
+      update: Actualización
   rateUs:
     title: Calificarnos
   configMigration:
@@ -1569,6 +1577,7 @@ action:
   pinToToolbar: Fijar en la barra
   unpinFromToolbar: Quitar de la barra
   dragToReorder: Arrastra para reordenar
+  addCustomAction: Añadir acción AI personalizada
 noteSuggestion:
   title: Quizás quieras guardar
   description: Elige qué palabras guardar en tu Notebase y repásalas cuando quieras.

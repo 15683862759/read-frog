@@ -643,9 +643,12 @@ options:
       providerUnavailable: Seçilen sağlayıcı kullanılamıyor
     customActions:
       title: Özel AI Eylemleri
-      pageDescription: Kendi istemlerinizi yazın ve seçim araç çubuğundan seçili metin üzerinde çalıştırın.
+      pageDescription: Kendi istemlerinizi yazın ve seçim araç çubuğundan seçili metin üzerinde çalıştırın. Her sonucun verileri, stili ve etkileşimleri tamamen özelleştirilebilir.
       description: Seçilen metin için kendi yapılandırılmış AI eylemlerinizi ekleyin
       configTitle: Eylem yapılandırması
+      introVideo:
+        trigger: "Videoyu izle"
+        title: "30 saniyede Özel AI Eylemleri"
       builtIn: Yerleşik
       add: AI eylemi ekle
       edit: AI eylemini düzenle
@@ -723,8 +726,10 @@ options:
           replay: Yeniden oynat
           sampleData: Örnek veriler
           sampleDataHint: Yalnızca bu önizlemede kullanılır ve kaydedilmez.
+          sampleDataSavedHint: Yalnızca bu önizlemede kullanılır ve bu eylemle birlikte kaydedilir.
           sampleDataReset: Örnekleri sıfırla
-          sampleValue: Örnek $1
+          sampleSelection: Seçili metin
+          sampleTargetLanguage: Hedef dil
           insertField: Alan
           insertSpeak: Seslendirme düğmesi
           insertCondition: Doluysa
@@ -1469,6 +1474,9 @@ options:
           description: Tüm önbelleğe alınmış AI bölümlendirme sonuçları silinecektir. AI bölümlendirme etkinleştirilmiş bir video oynatıldığında altyazılar yeniden işlenecektir.
   whatsNew:
     title: Yenilikler
+    postType:
+      promotion: Kampanya
+      update: Güncelleme
   rateUs:
     title: Bizi Değerlendirin
   configMigration:
@@ -1564,6 +1572,7 @@ action:
   pinToToolbar: Araç çubuğuna sabitle
   unpinFromToolbar: Araç çubuğundan kaldır
   dragToReorder: Sıralamak için sürükleyin
+  addCustomAction: Özel AI eylemi ekle
 noteSuggestion:
   title: Kaydetmek isteyebilirsiniz
   description: Notebase'inize kaydetmek istediğiniz kelimeleri seçin ve dilediğiniz zaman tekrarlayın.

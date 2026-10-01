@@ -1,5 +1,41 @@
 # @read-frog/extension
 
+## 1.49.3
+
+### Patch Changes
+
+- [#2279](https://github.com/mengxi-ream/read-frog/pull/2279) [`9317728`](https://github.com/mengxi-ream/read-frog/commit/931772800526323a5b6032306b427de997591f91) Thanks [@mengxi-ream](https://github.com/mengxi-ream)! - feat(custom-actions): add a button beside the Action config description that plays the custom AI actions intro film
+
+## 1.49.2
+
+### Patch Changes
+
+- [#2271](https://github.com/mengxi-ream/read-frog/pull/2271) [`2acb82a`](https://github.com/mengxi-ream/read-frog/commit/2acb82ada2a4ac12b3b6b09a4536e6d7337aefec) Thanks [@ananaBMaster](https://github.com/ananaBMaster)! - fix(options): give the custom action and API provider lists the same layout
+
+- [#2272](https://github.com/mengxi-ream/read-frog/pull/2272) [`17f09e1`](https://github.com/mengxi-ream/read-frog/commit/17f09e17dff294afa2734a6815a4e64c4477b43e) Thanks [@ananaBMaster](https://github.com/ananaBMaster)! - feat(custom-actions): save layout sample data with each custom AI action
+
+## 1.49.1
+
+### Patch Changes
+
+- [#2261](https://github.com/mengxi-ream/read-frog/pull/2261) [`7baf76a`](https://github.com/mengxi-ream/read-frog/commit/7baf76ae8abf41e003d8112fb77ff58b38de340d) Thanks [@ananaBMaster](https://github.com/ananaBMaster)! - feat(custom-actions): offer an Upgrade to pricing when Built-in AI quota runs out
+
+- [#2260](https://github.com/mengxi-ream/read-frog/pull/2260) [`c4bdbee`](https://github.com/mengxi-ream/read-frog/commit/c4bdbee33dd7944d0b3c14990a7fc6f16c90a947) Thanks [@ananaBMaster](https://github.com/ananaBMaster)! - fix(tts): explain language detection fallback
+
+- [#2268](https://github.com/mengxi-ream/read-frog/pull/2268) [`da1df37`](https://github.com/mengxi-ream/read-frog/commit/da1df3795595f6ca4dc9e9cd26923190759319f6) Thanks [@ananaBMaster](https://github.com/ananaBMaster)! - feat(selection-toolbar): add custom AI actions from the more menu
+
+- [#2269](https://github.com/mengxi-ream/read-frog/pull/2269) [`d88b1b4`](https://github.com/mengxi-ream/read-frog/commit/d88b1b47b077a37ed92d4fb94696cfdeb77e1c64) Thanks [@ananaBMaster](https://github.com/ananaBMaster)! - fix(providers): load provider icons from UNPKG
+
+- [#2262](https://github.com/mengxi-ream/read-frog/pull/2262) [`c6c8bf2`](https://github.com/mengxi-ream/read-frog/commit/c6c8bf24fbb32dc6ef3f672f1ffb3ab98c8562de) Thanks [@ananaBMaster](https://github.com/ananaBMaster)! - fix(selection-toolbar): stop custom action footer controls from overlapping in narrow popovers
+
+- [#2267](https://github.com/mengxi-ream/read-frog/pull/2267) [`10f751a`](https://github.com/mengxi-ream/read-frog/commit/10f751a43cfba002b8491bcc965c6c79aa7a0098) Thanks [@ananaBMaster](https://github.com/ananaBMaster)! - fix(selection-toolbar): keep the close menu above the toolbar when it opens over it
+
+- [#2263](https://github.com/mengxi-ream/read-frog/pull/2263) [`0c3bf08`](https://github.com/mengxi-ream/read-frog/commit/0c3bf08c0dcea07c3c890c8bcddec453414b65e7) Thanks [@ananaBMaster](https://github.com/ananaBMaster)! - fix(selection-toolbar): clip hovers to the toolbar corners and set off the more button
+
+- [#2264](https://github.com/mengxi-ream/read-frog/pull/2264) [`6c0996f`](https://github.com/mengxi-ream/read-frog/commit/6c0996fc0075e483edc2552a1477e5f78815992e) Thanks [@taiiiyang](https://github.com/taiiiyang)! - fix(subtitles): show the next caption after a pause instead of an empty box
+
+- [#2270](https://github.com/mengxi-ream/read-frog/pull/2270) [`f4ab276`](https://github.com/mengxi-ream/read-frog/commit/f4ab276aeb5bc35d3613e4f2c638baa6cdf529e3) Thanks [@ananaBMaster](https://github.com/ananaBMaster)! - feat(options): badge What's New post types and don't auto-open promotions for Pro and Ultra
+
 ## 1.49.0
 
 ### Minor Changes

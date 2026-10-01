@@ -644,9 +644,12 @@ options:
       providerUnavailable: Selected provider is unavailable
     customActions:
       title: Custom AI Actions
-      pageDescription: Write your own prompts and run them on selected text from the selection toolbar.
+      pageDescription: Write your own prompts and run them on selected text from the selection toolbar. The data, style and interactions of each result are all yours to customize.
       description: Add your own structured AI actions for selected text
       configTitle: Action config
+      introVideo:
+        trigger: "Watch video"
+        title: "Custom AI Actions in 30 seconds"
       builtIn: Built-in
       badges:
         new: New
@@ -729,8 +732,10 @@ options:
           replay: Replay
           sampleData: Sample data
           sampleDataHint: Only used in this preview and never saved.
+          sampleDataSavedHint: Only used in this preview, and saved with this action.
           sampleDataReset: Reset samples
-          sampleValue: Sample $1
+          sampleSelection: Selected text
+          sampleTargetLanguage: Target language
           insertField: Field
           insertSpeak: Speak button
           insertCondition: If filled
@@ -1616,6 +1621,9 @@ options:
           description: This will delete all cached AI segmentation results. The next time you play a video with AI segmentation enabled, it will re-process the subtitles.
   whatsNew:
     title: What's New
+    postType:
+      promotion: Promotion
+      update: Update
   rateUs:
     title: Rate Us
   configMigration:
@@ -1711,6 +1719,7 @@ action:
   pinToToolbar: Pin to toolbar
   unpinFromToolbar: Unpin from toolbar
   dragToReorder: Drag to reorder
+  addCustomAction: Add custom AI action
 noteSuggestion:
   title: You might want to save
   description: Choose which words to save to your Notebase and review anytime.

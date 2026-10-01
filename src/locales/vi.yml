@@ -643,9 +643,12 @@ options:
       providerUnavailable: Nhà cung cấp đã chọn không khả dụng
     customActions:
       title: Hành động AI tùy chỉnh
-      pageDescription: Viết prompt của riêng bạn và chạy trên văn bản đã chọn từ thanh công cụ chọn văn bản.
+      pageDescription: Viết prompt của riêng bạn và chạy trên văn bản đã chọn từ thanh công cụ chọn văn bản. Dữ liệu, kiểu dáng và cách tương tác của kết quả đều có thể tùy chỉnh.
       description: Thêm các hành động AI có cấu trúc của riêng bạn cho văn bản được chọn
       configTitle: Cấu hình hành động
+      introVideo:
+        trigger: "Xem video"
+        title: "Hành động AI tùy chỉnh trong 30 giây"
       builtIn: Tích hợp
       add: Thêm hành động AI
       edit: Chỉnh sửa hành động AI
@@ -723,8 +726,10 @@ options:
           replay: Phát lại
           sampleData: Dữ liệu mẫu
           sampleDataHint: Chỉ dùng cho bản xem trước này và không được lưu.
+          sampleDataSavedHint: Chỉ dùng cho bản xem trước này và được lưu cùng tác vụ này.
           sampleDataReset: Đặt lại mẫu
-          sampleValue: Mẫu $1
+          sampleSelection: Văn bản đã chọn
+          sampleTargetLanguage: Ngôn ngữ đích
           insertField: Trường
           insertSpeak: Nút đọc
           insertCondition: Khi có giá trị
@@ -1469,6 +1474,9 @@ options:
           description: Tất cả kết quả AI phân đoạn đã lưu trong bộ nhớ đệm sẽ bị xóa. Lần tới khi phát video có bật AI phân đoạn, phụ đề sẽ được xử lý lại.
   whatsNew:
     title: Có gì mới
+    postType:
+      promotion: Khuyến mãi
+      update: Cập nhật
   rateUs:
     title: Đánh giá chúng tôi
   configMigration:
@@ -1564,6 +1572,7 @@ action:
   pinToToolbar: Ghim vào thanh công cụ
   unpinFromToolbar: Bỏ ghim khỏi thanh công cụ
   dragToReorder: Kéo để sắp xếp lại
+  addCustomAction: Thêm hành động AI tùy chỉnh
 noteSuggestion:
   title: Có thể bạn muốn lưu
   description: Chọn những từ bạn muốn lưu vào Notebase để ôn tập bất cứ lúc nào.

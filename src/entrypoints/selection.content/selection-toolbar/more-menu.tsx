@@ -26,13 +26,18 @@ import {
   IconPin,
   IconPinnedFilled,
   IconPlayerStopFilled,
+  IconPlus,
   IconVolume,
 } from "@tabler/icons-react"
 import { useAtom } from "jotai"
 import { useRef, useState } from "react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/base-ui/popover"
+import { Separator } from "@/components/ui/base-ui/separator"
+import { SelectionToolbarTooltip } from "@/components/ui/selection-popover/selection-tooltip"
 import { configFieldsAtomMap } from "@/utils/atoms/config"
 import { i18n } from "@/utils/i18n"
+import { sendMessage } from "@/utils/message"
+import { buildAddCustomActionOptionsRoute } from "@/utils/navigation"
 import {
   getSelectionToolbarItems,
   reorderSelectionToolbarItems,
@@ -40,7 +45,6 @@ import {
 } from "@/utils/selection-toolbar-items"
 import { cn } from "@/utils/styles/utils"
 import { shadowWrapper } from ".."
-import { SelectionToolbarTooltip } from "../components/selection-tooltip"
 import { SELECTION_CONTENT_OVERLAY_LAYERS } from "../overlay-layers"
 import { DropEvent } from "./close-button"
 import { useSelectionCustomActionPopover } from "./custom-action-button/provider"
@@ -52,6 +56,7 @@ type SelectionSpeech = ReturnType<typeof useSelectionSpeech>
 // The toolbar's "more" menu: every enabled item, pinned or not, in the
 // toolbar's order. A row runs its item; its pin puts the item's button on the
 // toolbar or takes it off; its grip drags it to a new place in the order.
+// Below the list, a last row opens the options page's "add action" dialog.
 export function SelectionToolbarMoreMenu() {
   const [selectionToolbar, setSelectionToolbar] = useAtom(configFieldsAtomMap.selectionToolbar)
   const [open, setOpen] = useState(false)
@@ -86,6 +91,11 @@ export function SelectionToolbarMoreMenu() {
     } else {
       speech.toggle()
     }
+  }
+
+  const addCustomAction = () => {
+    changeOpen(false)
+    void sendMessage("openOptionsPage", { route: buildAddCustomActionOptionsRoute() })
   }
 
   return (
@@ -138,6 +148,17 @@ export function SelectionToolbarMoreMenu() {
             void setSelectionToolbar((current) => reorderSelectionToolbarItems(current, orderedIds))
           }}
         />
+        {/* Edge to edge: the component's own horizontal width wins over a bare `w-auto`. */}
+        <Separator className="-mx-1 my-1 data-[orientation=horizontal]:w-auto" />
+        {/* Its icon lines up with the rows' icons, past their grips. */}
+        <button
+          type="button"
+          className="flex h-8 shrink-0 cursor-pointer items-center gap-2 rounded-md pr-1 pl-4.5 text-left text-muted-foreground hover:bg-accent hover:text-foreground"
+          onClick={addCustomAction}
+        >
+          <IconPlus className="size-4 shrink-0" strokeWidth={1.6} />
+          <span className="truncate">{i18n.t("action.addCustomAction")}</span>
+        </button>
       </PopoverContent>
     </Popover>
   )

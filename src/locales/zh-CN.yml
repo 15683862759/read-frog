@@ -644,9 +644,12 @@ options:
       providerUnavailable: 所选提供商不可用
     customActions:
       title: 自定义 AI 指令
-      pageDescription: 编写自己的提示词，从划词工具栏对选中的文本运行。
+      pageDescription: 编写自己的提示词，从划词工具栏对选中的文本运行。指令生成结果的数据、样式和交互都可以自定义。
       description: 为划词添加你自己的结构化 AI 操作
       configTitle: 指令配置
+      introVideo:
+        trigger: "观看视频"
+        title: "30 秒了解自定义 AI 指令"
       builtIn: 内置
       badges:
         new: 新增
@@ -729,8 +732,10 @@ options:
           replay: 重放
           sampleData: 示例数据
           sampleDataHint: 仅用于此预览，不会保存。
+          sampleDataSavedHint: 仅用于此预览，随此指令一起保存。
           sampleDataReset: 重置示例
-          sampleValue: $1示例
+          sampleSelection: 选中的文本
+          sampleTargetLanguage: 目标语言
           insertField: 字段
           insertSpeak: 朗读按钮
           insertCondition: 有值时显示
@@ -1479,6 +1484,9 @@ options:
           description: 这将删除所有已缓存的 AI 断句结果。下次播放启用 AI 断句的视频时，将重新处理字幕。
   whatsNew:
     title: 最近更新
+    postType:
+      promotion: 优惠
+      update: 更新
   rateUs:
     title: 好评支持
   configMigration:
@@ -1574,6 +1582,7 @@ action:
   pinToToolbar: 固定到工具栏
   unpinFromToolbar: 从工具栏取消固定
   dragToReorder: 拖动以排序
+  addCustomAction: 添加自定义 AI 指令
 noteSuggestion:
   title: 猜你想存
   description: 选择要存入笔记库的词，将来随时复习

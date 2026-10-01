@@ -644,9 +644,12 @@ options:
       providerUnavailable: Seçilmiş provayder əlçatan deyil
     customActions:
       title: Fərdi süni intellekt əməliyyatları
-      pageDescription: Öz təlimatlarınızı yazın və seçim alətlər panelindən seçilmiş mətnə tətbiq edin.
+      pageDescription: Öz təlimatlarınızı yazın və seçim alətlər panelindən seçilmiş mətnə tətbiq edin. Hər nəticənin məlumatları, üslubu və qarşılıqlı əlaqəsi tam fərdiləşdirilə bilər.
       description: Seçilmiş mətn üçün strukturlaşdırılmış fərdi süni intellekt əməliyyatları əlavə edin
       configTitle: Əməliyyat konfiqurasiyası
+      introVideo:
+        trigger: "Videoya baxın"
+        title: "30 saniyədə fərdi süni intellekt əməliyyatları"
       builtIn: Daxili
       add: Süni intellekt əməliyyatı əlavə et
       edit: Süni intellekt əməliyyatını redaktə et
@@ -724,8 +727,10 @@ options:
           replay: Yenidən oynat
           sampleData: Nümunə məlumat
           sampleDataHint: Yalnız bu önizləmədə istifadə olunur və yadda saxlanılmır.
+          sampleDataSavedHint: Yalnız bu önizləmədə istifadə olunur və bu təlimatla birlikdə yadda saxlanılır.
           sampleDataReset: Nümunələri sıfırla
-          sampleValue: Nümunə $1
+          sampleSelection: Seçilmiş mətn
+          sampleTargetLanguage: Hədəf dili
           insertField: Sahə
           insertSpeak: Səsləndirmə düyməsi
           insertCondition: Doludursa
@@ -1474,6 +1479,9 @@ options:
           description: Keşdəki bütün süni intellekt seqmentləşdirmə nəticələri silinəcək. Növbəti dəfə süni intellekt seqmentləşdirməsi aktiv halda video açdıqda subtitrlər yenidən işlənəcək.
   whatsNew:
     title: Yeniliklər
+    postType:
+      promotion: Kampaniya
+      update: Yeniləmə
   rateUs:
     title: Bizi qiymətləndir
   configMigration:
@@ -1569,6 +1577,7 @@ action:
   pinToToolbar: Alətlər panelinə sabitlə
   unpinFromToolbar: Alətlər panelindən ayır
   dragToReorder: Sıralamaq üçün sürükləyin
+  addCustomAction: Fərdi süni intellekt əməliyyatı əlavə et
 noteSuggestion:
   title: Saxlamağa dəyər
   description: Notebase daxilində saxlamaq istədiyiniz sözləri seçin və istənilən vaxt təkrarlayın.
