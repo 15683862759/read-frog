@@ -20,7 +20,7 @@ import { buildCustomActionLayoutScope } from "@/utils/layout-host/host"
 
 async function readLocale(locale: string): Promise<string[]> {
   const text = await readFile(new URL(`../../../locales/${locale}.yml`, import.meta.url), "utf8")
-  return text.split("\n")
+  return text.replace(/\r\n/g, "\n").split("\n")
 }
 
 // The lines of the templates' `sentenceAnalysis` section, its own indentation

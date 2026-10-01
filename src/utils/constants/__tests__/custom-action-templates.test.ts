@@ -29,7 +29,9 @@ function createFromTemplate(id: string) {
 // A locale's `blank.prompt` block, its indentation removed. i18n is mocked in
 // tests, so the text is read from the locale file.
 async function readBlankPrompt(locale: string): Promise<string | undefined> {
-  const text = await readFile(new URL(`../../../locales/${locale}.yml`, import.meta.url), "utf8")
+  const text = (
+    await readFile(new URL(`../../../locales/${locale}.yml`, import.meta.url), "utf8")
+  ).replace(/\r\n/g, "\n")
   const block = /^ {8}blank:\n(?: {10}.*\n)*? {10}prompt: \|-\n((?: {12}.*\n)+)/m.exec(text)?.[1]
   return block?.replace(/^ {12}/gm, "").trimEnd()
 }
