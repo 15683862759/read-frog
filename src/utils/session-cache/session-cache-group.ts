@@ -28,7 +28,6 @@ async function runWithKeysListLock<T>(
   }
 }
 
-// TODO: solve race condition of cache group registry
 export class SessionCache {
   private prefix: string
   private keysListKey: `session:${string}`
