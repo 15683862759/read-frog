@@ -55,17 +55,24 @@ describe("cancelledScopeRegistry", () => {
     expect(registry.has("8:session-a")).toBe(false)
   })
 
-  it("expires entries after the TTL", () => {
+  it("expires exact scopes after the TTL without another write", () => {
     vi.useFakeTimers()
     const registry = new CancelledScopeRegistry(1_000)
     registry.markScope("7:old")
 
     vi.advanceTimersByTime(2_000)
-    // Pruning happens on write; a new mark evicts the expired entry.
-    registry.markScope("7:new")
 
     expect(registry.has("7:old")).toBe(false)
-    expect(registry.has("7:new")).toBe(true)
+  })
+
+  it("expires prefixes after the TTL without another write", () => {
+    vi.useFakeTimers()
+    const registry = new CancelledScopeRegistry(1_000)
+    registry.markPrefix("7:")
+
+    vi.advanceTimersByTime(2_000)
+
+    expect(registry.has("7:session-a")).toBe(false)
   })
 
   it("evicts the oldest entries beyond the size cap", () => {

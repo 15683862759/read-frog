@@ -48,6 +48,7 @@ export class CancelledScopeRegistry {
   }
 
   has(scopeKey: string): boolean {
+    this.prune()
     if (this.scopes.has(scopeKey)) return true
     for (const prefix of this.prefixes.keys()) {
       if (scopeKey.startsWith(prefix)) return true
