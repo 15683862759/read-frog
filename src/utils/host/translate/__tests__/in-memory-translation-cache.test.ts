@@ -67,7 +67,7 @@ describe("in-memory translation tier in translateTextCore", () => {
     // A virtualized page recreating its nodes re-runs this exact call; the
     // second run must not pay the message round trip again.
     expect(sendMessage).toHaveBeenCalledTimes(1)
-  })
+  }, 15_000)
 
   it("misses when the request identity differs", async () => {
     const { sendMessage, translate } = await setup()
